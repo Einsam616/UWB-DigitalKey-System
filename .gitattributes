@@ -1,0 +1,5 @@
+# Preserve vendor source formatting without hiding whitespace issues in project code.
+Firmware/Lock/02_Core/** -whitespace
+Firmware/Lock/03_MCU/** -whitespace
+Firmware/Lock/04_Driver/** -whitespace
+Firmware/Lock/RTE/** -whitespace

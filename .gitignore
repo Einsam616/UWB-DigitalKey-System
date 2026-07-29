@@ -1,0 +1,36 @@
+# Local source documents and temporary renders
+*.pdf
+tmp/
+
+# Keil user state and generated output
+*.uvguix.*
+*.uvoptx
+*.bak
+*.dep
+*.crf
+*.d
+*.o
+*.axf
+*.hex
+*.htm
+*.lnp
+*.map
+*.sct
+*.lst
+*.m51
+*.plg
+*.tra
+*.build_log.htm
+Firmware/Lock/Objects/
+Firmware/Lock/Listings/
+Firmware/Lock/baseline-build.log
+
+# Host test output
+Tests/build/
+*.exe
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
