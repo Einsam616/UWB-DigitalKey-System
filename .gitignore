@@ -1,6 +1,11 @@
 # Local source documents and temporary renders
 *.pdf
+docs/
 tmp/
+/tools/
+/icon.png
+/C题题目分析与方案建议.md
+/UWB_ProTag2s适用性分析.md
 
 # Keil user state and generated output
 *.uvguix.*
@@ -21,13 +26,25 @@ tmp/
 *.plg
 *.tra
 *.build_log.htm
-Firmware/Lock/Objects/
-Firmware/Lock/Listings/
-Firmware/Lock/baseline-build.log
+*.log
+*.lib
+*.base@*
+**/Objects/
+**/Listings/
+**/DebugConfig/
+**/RTE/_*/
 
-# Host test output
+# Local test projects and host output
+Firmware/Tests/
+Firmware/Lock/05_App/README.md
 Tests/build/
+**/Tools/
+**/DeleteKEIL&IARTempFiles.bat
 *.exe
+
+# Generated font previews
+**/*Preview.png
+**/*Text.txt
 
 # Editor and OS files
 .vscode/

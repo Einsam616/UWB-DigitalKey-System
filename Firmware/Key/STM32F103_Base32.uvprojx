@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>UWB_DigitalKey_Lock</TargetName>
+      <TargetName>EXAMPLE</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>UWB_DigitalKey_Lock</OutputName>
+          <OutputName>STM32F103_Base32</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -385,29 +385,19 @@
           <GroupName>01_Doc</GroupName>
           <Files>
             <File>
-              <FileName>README.md</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\01_Doc\README.md</FilePath>
+              <FileName>R</FileName>
+              <FileType>0</FileType>
+              <FilePath>A</FilePath>
             </File>
             <File>
-              <FileName>PinMap.md</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\01_Doc\PinMap.md</FilePath>
+              <FileName>5</FileName>
+              <FileType>0</FileType>
+              <FilePath></FilePath>
             </File>
             <File>
-              <FileName>Libraries.md</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\01_Doc\Libraries.md</FilePath>
-            </File>
-            <File>
-              <FileName>LockPacketTestVectors.md</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\01_Doc\LockPacketTestVectors.md</FilePath>
-            </File>
-            <File>
-              <FileName>UI.md</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\01_Doc\UI.md</FilePath>
+              <FileName>.</FileName>
+              <FileType>0</FileType>
+              <FilePath>0</FilePath>
             </File>
           </Files>
         </Group>
@@ -475,19 +465,9 @@
           <GroupName>04_Driver</GroupName>
           <Files>
             <File>
-              <FileName>misc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\04_Driver\misc.c</FilePath>
-            </File>
-            <File>
               <FileName>misc.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\04_Driver\misc.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\04_Driver\stm32f10x_flash.c</FilePath>
             </File>
             <File>
               <FileName>stm32f10x_flash.h</FileName>
@@ -520,29 +500,9 @@
               <FilePath>.\04_Driver\stm32f10x_spi.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_spi.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\04_Driver\stm32f10x_spi.h</FilePath>
-            </File>
-            <File>
               <FileName>stm32f10x_usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\04_Driver\stm32f10x_usart.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_usart.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\04_Driver\stm32f10x_usart.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\04_Driver\stm32f10x_tim.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_tim.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\04_Driver\stm32f10x_tim.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -555,14 +515,9 @@
               <FilePath>.\05_App\App.c</FilePath>
             </File>
             <File>
-              <FileName>Cc1101.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\05_App\Cc1101.c</FilePath>
-            </File>
-            <File>
-              <FileName>DebugSerial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\05_App\DebugSerial.c</FilePath>
+              <FileName>App.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\05_App\App.h</FilePath>
             </File>
             <File>
               <FileName>DipSwitch.c</FileName>
@@ -570,34 +525,49 @@
               <FilePath>.\05_App\DipSwitch.c</FilePath>
             </File>
             <File>
-              <FileName>LockIo.c</FileName>
+              <FileName>Cc1101.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\05_App\LockIo.c</FilePath>
+              <FilePath>.\05_App\Cc1101.c</FilePath>
             </File>
             <File>
-              <FileName>TM1637Keypad.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\05_App\TM1637Keypad.c</FilePath>
-            </File>
-            <File>
-              <FileName>Screen.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\05_App\Screen.c</FilePath>
-            </File>
-            <File>
-              <FileName>ChineseFont.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\05_App\ChineseFont.c</FilePath>
-            </File>
-            <File>
-              <FileName>ChineseFont16Data.h</FileName>
+              <FileName>Cc1101.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\05_App\ChineseFont16Data.h</FilePath>
+              <FilePath>.\05_App\Cc1101.h</FilePath>
             </File>
             <File>
-              <FileName>ChineseFont24Data.h</FileName>
+              <FileName>Cc1101Regs.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\05_App\ChineseFont24Data.h</FilePath>
+              <FilePath>.\05_App\Cc1101Regs.h</FilePath>
+            </File>
+            <File>
+              <FileName>OLEDI2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\05_App\OLEDI2C.c</FilePath>
+            </File>
+            <File>
+              <FileName>OLEDI2C.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\05_App\OLEDI2C.h</FilePath>
+            </File>
+            <File>
+              <FileName>UwbParser.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\05_App\UwbParser.c</FilePath>
+            </File>
+            <File>
+              <FileName>UwbParser.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\05_App\UwbParser.h</FilePath>
+            </File>
+            <File>
+              <FileName>UwbSerial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\05_App\UwbSerial.c</FilePath>
+            </File>
+            <File>
+              <FileName>UwbSerial.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\05_App\UwbSerial.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -615,14 +585,9 @@
               <FilePath>.\06_Soft\delay.h</FilePath>
             </File>
             <File>
-              <FileName>LockPacket.c</FileName>
+              <FileName>PositionSolver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\06_Soft\LockPacket.c</FilePath>
-            </File>
-            <File>
-              <FileName>LockState.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\06_Soft\LockState.c</FilePath>
+              <FilePath>.\06_Soft\PositionSolver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -643,75 +608,6 @@
         </Group>
         <Group>
           <GroupName>::Device</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>0</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>1</ComprImg>
-            </CommonProperty>
-            <GroupArmAds>
-              <Cads>
-                <interw>2</interw>
-                <Optim>0</Optim>
-                <oTime>2</oTime>
-                <SplitLS>2</SplitLS>
-                <OneElfS>2</OneElfS>
-                <Strict>2</Strict>
-                <EnumInt>2</EnumInt>
-                <PlainCh>2</PlainCh>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <wLevel>0</wLevel>
-                <uThumb>2</uThumb>
-                <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <uGnu>2</uGnu>
-                <useXO>2</useXO>
-                <v6Lang>0</v6Lang>
-                <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>2</v6Lto>
-                <v6WtE>2</v6WtE>
-                <v6Rtti>2</v6Rtti>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Cads>
-              <Aads>
-                <interw>2</interw>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <thumb>2</thumb>
-                <SplitLS>2</SplitLS>
-                <SwStkChk>2</SwStkChk>
-                <NoWarn>2</NoWarn>
-                <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aads>
-            </GroupArmAds>
-          </GroupOption>
         </Group>
       </Groups>
     </Target>
