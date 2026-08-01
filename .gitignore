@@ -37,6 +37,8 @@ tmp/
 # Local test projects and host output
 Firmware/Tests/
 Firmware/Lock/05_App/README.md
+output/
+*.obj
 Tests/build/
 **/Tools/
 **/DeleteKEIL&IARTempFiles.bat

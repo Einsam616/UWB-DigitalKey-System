@@ -7,14 +7,14 @@
 #include "stm32f10x_spi.h"
 
 #define CC1101_CS_PORT       GPIOB
-#define CC1101_CS_PIN        GPIO_Pin_11
+#define CC1101_CS_PIN        GPIO_Pin_12
 #define CC1101_GDO0_PORT     GPIOA
 #define CC1101_GDO0_PIN      GPIO_Pin_5
 #define CC1101_MISO_PORT     GPIOB
 #define CC1101_MISO_PIN      GPIO_Pin_4
 #define CC1101_SPI           SPI1
 #define CC1101_MAX_PAYLOAD   60u
-#define CC1101_DEFAULT_WAIT  150000u
+#define CC1101_DEFAULT_WAIT  250000u
 #define CC1101_WRITE_BURST   0x40u
 #define CC1101_READ_SINGLE   0x80u
 #define CC1101_READ_BURST    0xC0u

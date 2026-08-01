@@ -20,9 +20,16 @@ static const uint16_t s_led_pins[LOCK_LED_COUNT] = {
 
 static uint32_t s_buzzer_deadline;
 static uint8_t s_buzzer_active;
+static uint8_t s_buzzer_phase_on;
+static uint8_t s_buzzer_remaining;
+static uint16_t s_buzzer_on_ms;
+static uint16_t s_buzzer_off_ms;
 static uint8_t s_led_mask;
 
-/** @brief Initialize PA0-PA4 LEDs and PB8 active-low buzzer output. */
+/**
+ * @brief 初始化 PA0-PA4 状态灯和 PB8 低有效蜂鸣器。
+ * @note D1..D5 实物颜色依次为红、绿、蓝、黄、黄。
+ */
 void LockIo_Init(void)
 {
     GPIO_InitTypeDef gpio;
@@ -72,6 +79,10 @@ void LockIo_Init(void)
 
     s_buzzer_deadline = 0u;
     s_buzzer_active = 0u;
+    s_buzzer_phase_on = 0u;
+    s_buzzer_remaining = 0u;
+    s_buzzer_on_ms = 0u;
+    s_buzzer_off_ms = 0u;
     LockIo_SetBuzzer(0u);
 }
 
@@ -131,17 +142,62 @@ void LockIo_SetBuzzer(uint8_t enabled)
 /** @brief Start or extend a non-blocking buzzer pulse. */
 void LockIo_BeepUntil(uint32_t tick_ms, uint16_t duration_ms)
 {
-    s_buzzer_deadline = tick_ms + (uint32_t)duration_ms;
+    LockIo_BeepPattern(tick_ms, 1u, duration_ms, 0u);
+}
+
+/** @brief 启动指定次数的非阻塞蜂鸣序列，并覆盖尚未完成的旧序列。 */
+void LockIo_BeepPattern(uint32_t tick_ms, uint8_t count,
+                        uint16_t on_ms, uint16_t off_ms)
+{
+    if (count == 0u || on_ms == 0u)
+    {
+        LockIo_CancelBuzzer();
+        return;
+    }
+    s_buzzer_remaining = count;
+    s_buzzer_on_ms = on_ms;
+    s_buzzer_off_ms = off_ms;
+    s_buzzer_phase_on = 1u;
     s_buzzer_active = 1u;
+    s_buzzer_deadline = tick_ms + (uint32_t)on_ms;
     LockIo_SetBuzzer(1u);
 }
 
-/** @brief Turn off the buzzer after its deadline. */
+/** @brief 立即停止蜂鸣并清除序列状态。 */
+void LockIo_CancelBuzzer(void)
+{
+    s_buzzer_active = 0u;
+    s_buzzer_phase_on = 0u;
+    s_buzzer_remaining = 0u;
+    LockIo_SetBuzzer(0u);
+}
+
+/** @brief 按毫秒节拍推进蜂鸣和静音阶段。 */
 void LockIo_Service(uint32_t tick_ms)
 {
     if (s_buzzer_active != 0u && (int32_t)(tick_ms - s_buzzer_deadline) >= 0)
     {
-        s_buzzer_active = 0u;
-        LockIo_SetBuzzer(0u);
+        if (s_buzzer_phase_on != 0u)
+        {
+            LockIo_SetBuzzer(0u);
+            if (s_buzzer_remaining <= 1u)
+            {
+                s_buzzer_active = 0u;
+                s_buzzer_phase_on = 0u;
+                s_buzzer_remaining = 0u;
+            }
+            else
+            {
+                --s_buzzer_remaining;
+                s_buzzer_phase_on = 0u;
+                s_buzzer_deadline = tick_ms + (uint32_t)s_buzzer_off_ms;
+            }
+        }
+        else
+        {
+            s_buzzer_phase_on = 1u;
+            s_buzzer_deadline = tick_ms + (uint32_t)s_buzzer_on_ms;
+            LockIo_SetBuzzer(1u);
+        }
     }
 }

@@ -3,17 +3,22 @@
 
 #include <stdint.h>
 
-/**
- * @brief Initialize the lock-side four-bit identity switch inputs.
- * @note SW1..SW4 use PA6, PA7, PB9, PB10 and map to ID bits 3..0.
- *       Each input uses an internal pull-up; an ON switch connected to GND is 1.
+#define DIP_SWITCH_EVENT_NONE    0x00u
+#define DIP_SWITCH_EVENT_CHANGED 0x01u
+#define DIP_SWITCH_EVENT_APPLY   0x02u
+
+/*
+ * Lock ID switch wiring, in displayed bit order:
+ *   SW1 -> PA7  (bit3), SW2 -> PB1  (bit2),
+ *   SW3 -> PB10 (bit1), SW4 -> PB11 (bit0).
+ * PB9 is the active-low apply button. All inputs use internal pull-ups.
  */
 void DipSwitch_Init(void);
 
-/**
- * @brief Read the identity currently selected on the lock-side DIP switch.
- * @return Four-bit value from 0 to 15, with SW1 as the most significant bit.
- */
-uint8_t DipSwitch_ReadValue(void);
+/* Debounce the switches and report changed/apply events. */
+uint8_t DipSwitch_Service(uint32_t tick_ms);
+
+/* Return the debounced switch value used as the pending ID. */
+uint8_t DipSwitch_GetId(void);
 
 #endif

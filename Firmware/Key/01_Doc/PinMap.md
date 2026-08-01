@@ -4,6 +4,8 @@
 
 | 模块 | 信号 | MCU 引脚 | 方向/模式 | 外设 | 电气说明 |
 |---|---|---|---|---|---|
+| 电源入口 | 电池 -> SW_PWR -> 电源管理/3.3 V | - | 电源 | - | SW_PWR 使用自锁电源开关，导通后给 Key 整机供电 |
+| 电源指示 | LED_PWR | - | 电源指示 | - | 开关后级并联限流电阻和 LED；亮起表示已上电，不接 MCU GPIO |
 | UWB Anchor | Anchor RXD | PA9 | MCU 输出 | USART1_TX | 交叉连接：MCU PA9 -> Anchor RXD |
 | UWB Anchor | Anchor TXD | PA10 | MCU 输入 | USART1_RX | 交叉连接：Anchor TXD -> MCU PA10 |
 | UWB Anchor | GND | GND | 电源地 | - | 必须共地 |
@@ -15,10 +17,8 @@
 | CC1101 | SPI1 SCK | PB3 | 复用推挽输出 | SPI1 全重映射 | 关闭 JTAG，保留 SWD |
 | CC1101 | SPI1 MISO/GDO1 | PB4 | 上拉输入 | SPI1 全重映射 | 从机数据输出 |
 | CC1101 | SPI1 MOSI | PB5 | 复用推挽输出 | SPI1 全重映射 | 主机数据输出 |
-| CC1101 | CSN | PB11 | 推挽输出 | GPIO | Key 端独立片选，低有效 |
-| 拨码开关 | SW1 | PB12 | 内部上拉输入 | GPIO | ON 接 GND，显示 ID 第1位为1 |
-| 拨码开关 | SW2 | PB13 | 内部上拉输入 | GPIO | ON 接 GND，显示 ID 第2位为1 |
-| 拨码开关 | SW3 | PB14 | 内部上拉输入 | GPIO | ON 接 GND，显示 ID 第3位为1 |
-| 拨码开关 | SW4 | PB15 | 内部上拉输入 | GPIO | ON 接 GND，显示 ID 第4位为1 |
+| CC1101 | CSN | PB12 | 推挽输出 | GPIO | Key 端独立片选，低有效 |
 
-注意：Key 端 CC1101 的 SPI 与 GDO0 与 Lock 端一致，但 CSN 改为 PB11，避开 PB12~PB15 拨码。CSN 是 MCU 本地片选，两端引脚不同不影响 CC1101 空中通信。
+R1 启动方式：按下或拨到 ON 后，自锁电源开关保持供电；STM32 上电复位后固件自动运行并进入绑定/发送流程。关闭开关即整机断电。普通瞬时按钮若松手会断电，不适合作为唯一的保持电源开关。
+
+注意：Key 端身份由固件中的 `APP_KEY_ID=0x0D` 固定为 `1101`，不使用拨码和 GPIO。CC1101 的 SPI 与 GDO0 与 Lock 端一致，但 CSN 使用 PB12；CSN 是 MCU 本地片选，两端引脚不同不影响 CC1101 空中通信。PB13～PB15 当前空闲，可留作扩展。

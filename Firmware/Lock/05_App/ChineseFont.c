@@ -4,7 +4,11 @@
 #include "ChineseFont24Data.h"
 #include "Screen.h"
 
+/* 正文字库由 ChineseFont16Text.txt 按当前彩屏文案生成。 */
 #define CHINESE_FONT_Y_OFFSET 1u
+
+#define CHINESE_FONT16_ACTIVE_COUNT  CHINESE_FONT16_GLYPH_COUNT
+#define CHINESE_FONT16_ACTIVE_GLYPHS ChineseFont16_Glyphs
 
 static uint32_t ChineseFont_DecodeUtf8(const char **text)
 {
@@ -38,9 +42,9 @@ static uint32_t ChineseFont_DecodeUtf8(const char **text)
 static const uint8_t *ChineseFont_FindGlyph16(uint32_t codepoint)
 {
     uint16_t index;
-    for (index = 0u; index < CHINESE_FONT16_GLYPH_COUNT; index++) {
-        if (ChineseFont16_Glyphs[index].codepoint == codepoint) {
-            return ChineseFont16_Glyphs[index].bitmap;
+    for (index = 0u; index < CHINESE_FONT16_ACTIVE_COUNT; index++) {
+        if (CHINESE_FONT16_ACTIVE_GLYPHS[index].codepoint == codepoint) {
+            return CHINESE_FONT16_ACTIVE_GLYPHS[index].bitmap;
         }
     }
     return 0;
@@ -57,18 +61,6 @@ static const uint8_t *ChineseFont_FindGlyph24(uint32_t codepoint)
     return 0;
 }
 
-static uint8_t ChineseFont_IsPixelOn(const uint8_t *bitmap,
-                                     uint8_t width,
-                                     uint8_t row,
-                                     uint8_t column)
-{
-    uint8_t bytes_per_row = (uint8_t)((width + 7u) / 8u);
-    uint8_t byte_value = bitmap[(uint16_t)row * bytes_per_row +
-                                column / 8u];
-    return (uint8_t)((byte_value &
-                      (uint8_t)(0x80u >> (column % 8u))) != 0u);
-}
-
 static void ChineseFont_DrawGlyph(uint16_t x, uint16_t y,
                                   const uint8_t *bitmap,
                                   uint8_t width, uint8_t height,
@@ -76,38 +68,16 @@ static void ChineseFont_DrawGlyph(uint16_t x, uint16_t y,
                                   uint16_t back_color,
                                   uint8_t scale)
 {
-    uint8_t row;
-    uint8_t column;
-    uint8_t run_start;
-
     if (scale == 0u) scale = 1u;
-    Screen_FillRect(x, y, (uint16_t)(width * scale),
-                    (uint16_t)(height * scale), back_color);
     if (bitmap == 0) {
+        Screen_FillRect(x, y, (uint16_t)(width * scale),
+                        (uint16_t)(height * scale), back_color);
         Screen_DrawRect(x, y, (uint16_t)(width * scale),
                         (uint16_t)(height * scale), text_color);
         return;
     }
-    for (row = 0u; row < height; row++) {
-        column = 0u;
-        while (column < width) {
-            while ((column < width) &&
-                   (ChineseFont_IsPixelOn(bitmap, width, row, column) == 0u)) {
-                column++;
-            }
-            run_start = column;
-            while ((column < width) &&
-                   (ChineseFont_IsPixelOn(bitmap, width, row, column) != 0u)) {
-                column++;
-            }
-            if (column > run_start) {
-                Screen_FillRect((uint16_t)(x + (uint16_t)run_start * scale),
-                                (uint16_t)(y + (uint16_t)row * scale),
-                                (uint16_t)((column - run_start) * scale),
-                                scale, text_color);
-            }
-        }
-    }
+    Screen_DrawMonoBitmap(x, y, width, height, bitmap,
+                          text_color, back_color, scale);
 }
 
 void ChineseFont_ShowText(uint16_t x, uint16_t y,

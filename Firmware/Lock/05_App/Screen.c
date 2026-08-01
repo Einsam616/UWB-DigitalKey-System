@@ -614,6 +614,84 @@ void Screen_FillRect(uint16_t x, uint16_t y,
     Screen_WriteColorStream(color, count);
 }
 
+/** @brief 通过一次 LCD 连续写入绘制行优先 RGB565 位图。 */
+void Screen_DrawRgb565Bitmap(uint16_t x, uint16_t y,
+                             uint16_t width, uint16_t height,
+                             const uint16_t *pixels)
+{
+    uint32_t count;
+    uint16_t color;
+
+    if (pixels == 0 || width == 0u || height == 0u ||
+        (uint32_t)x + width > SCREEN_WIDTH ||
+        (uint32_t)y + height > SCREEN_HEIGHT)
+    {
+        return;
+    }
+
+    Screen_SetWindow(x, y, (uint16_t)(x + width - 1u),
+                     (uint16_t)(y + height - 1u));
+    count = (uint32_t)width * height;
+    SCREEN_CS_LOW();
+    SCREEN_DC_HIGH();
+    while (count-- > 0u)
+    {
+        color = *pixels++;
+        Screen_WriteByte((uint8_t)(color >> 8));
+        Screen_WriteByte((uint8_t)color);
+    }
+    SCREEN_CS_HIGH();
+}
+
+/** @brief 通过一次 LCD 连续写入绘制行优先、MSB 优先的单色点阵。 */
+void Screen_DrawMonoBitmap(uint16_t x, uint16_t y,
+                           uint8_t width, uint8_t height,
+                           const uint8_t *bitmap,
+                           uint16_t color, uint16_t back_color,
+                           uint8_t scale)
+{
+    uint8_t bytes_per_row;
+    uint8_t row;
+    uint8_t column;
+    uint8_t scale_x;
+    uint8_t scale_y;
+    uint16_t pixel_color;
+    uint16_t draw_width;
+    uint16_t draw_height;
+
+    if (bitmap == 0 || width == 0u || height == 0u) return;
+    if (scale == 0u) scale = 1u;
+    draw_width = (uint16_t)width * scale;
+    draw_height = (uint16_t)height * scale;
+    if ((uint32_t)x + draw_width > SCREEN_WIDTH ||
+        (uint32_t)y + draw_height > SCREEN_HEIGHT) return;
+
+    bytes_per_row = (uint8_t)((width + 7u) / 8u);
+    Screen_SetWindow(x, y, (uint16_t)(x + draw_width - 1u),
+                     (uint16_t)(y + draw_height - 1u));
+    SCREEN_CS_LOW();
+    SCREEN_DC_HIGH();
+    for (row = 0u; row < height; row++)
+    {
+        for (scale_y = 0u; scale_y < scale; scale_y++)
+        {
+            for (column = 0u; column < width; column++)
+            {
+                pixel_color = ((bitmap[(uint16_t)row * bytes_per_row +
+                                       column / 8u] &
+                                (uint8_t)(0x80u >> (column % 8u))) != 0u) ?
+                              color : back_color;
+                for (scale_x = 0u; scale_x < scale; scale_x++)
+                {
+                    Screen_WriteByte((uint8_t)(pixel_color >> 8));
+                    Screen_WriteByte((uint8_t)pixel_color);
+                }
+            }
+        }
+    }
+    SCREEN_CS_HIGH();
+}
+
 void Screen_DrawRect(uint16_t x, uint16_t y,
                      uint16_t width, uint16_t height,
                      uint16_t color)

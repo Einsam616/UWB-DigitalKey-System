@@ -59,6 +59,11 @@ static int Replay(const uint8_t *stream,
 
 int main(void)
 {
+    UwbLineParser ack_parser;
+    UwbMeasurement ack_measurement;
+    size_t ack_index;
+    static const uint8_t bind_ack_stream[] =
+        "startup noise\r\nOK+TWLT=1\r\n";
     static const uint8_t captured_stream[] =
         "\x00\xFF\x83\x19startup\x00noise\r\n"
         "mc 01 0004b5 000000 000000 000000 000000 000000 008a bb 0002302c a4e21:0000 0 0c00 5c2d 038d\r\n"
@@ -83,6 +88,24 @@ int main(void)
         {0x4E21u, 0x0004B5u}
     };
 
+    UwbParser_Reset(&ack_parser);
+    for (ack_index = 0u; ack_index < sizeof(bind_ack_stream) - 1u;
+         ++ack_index)
+    {
+        if (UwbParser_Consume(&ack_parser, bind_ack_stream[ack_index],
+                              &ack_measurement) != 0u)
+        {
+            fputs("binding acknowledgement parsed as mc data\n", stderr);
+            return 1;
+        }
+    }
+    if (UwbParser_TakeBindAck(&ack_parser) == 0u ||
+        UwbParser_TakeBindAck(&ack_parser) != 0u)
+    {
+        fputs("binding acknowledgement latch failed\n", stderr);
+        return 1;
+    }
+
     if (Replay(captured_stream, sizeof(captured_stream) - 1u,
                expected, sizeof(expected) / sizeof(expected[0])) != 0)
     {
@@ -95,6 +118,6 @@ int main(void)
         return 1;
     }
 
-    puts("UwbParser regressions: PASS (captured 6/6, extended 1/1)");
+    puts("UwbParser regressions: PASS (bind ack, captured 6/6, extended 1/1)");
     return 0;
 }

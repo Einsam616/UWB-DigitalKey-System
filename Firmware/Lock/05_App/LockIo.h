@@ -5,11 +5,11 @@
 
 typedef enum
 {
-    LOCK_LED_RUN = 0,
-    LOCK_LED_LINK,
-    LOCK_LED_WELCOME,
-    LOCK_LED_LOCKED,
+    LOCK_LED_LOCKED = 0,
     LOCK_LED_UNLOCKED,
+    LOCK_LED_KEY_DETECTED,
+    LOCK_LED_WELCOME,
+    LOCK_LED_ID_VALID,
     LOCK_LED_COUNT
 } LockIoLed;
 
@@ -39,6 +39,19 @@ void LockIo_SetBuzzer(uint8_t enabled);
  * @param duration_ms Pulse duration.
  */
 void LockIo_BeepUntil(uint32_t tick_ms, uint16_t duration_ms);
+
+/**
+ * @brief 启动非阻塞蜂鸣序列。
+ * @param tick_ms 当前毫秒节拍。
+ * @param count 蜂鸣次数，零表示直接停止。
+ * @param on_ms 每次鸣叫时间。
+ * @param off_ms 相邻两次鸣叫的间隔。
+ */
+void LockIo_BeepPattern(uint32_t tick_ms, uint8_t count,
+                        uint16_t on_ms, uint16_t off_ms);
+
+/** @brief 立即取消当前蜂鸣或蜂鸣序列。 */
+void LockIo_CancelBuzzer(void);
 
 /**
  * @brief Service the timed buzzer pulse.

@@ -263,6 +263,31 @@ void Screen_FillRect(uint16_t x, uint16_t y,
                      uint16_t color);
 
 /**
+  * @brief  连续绘制一幅行优先 RGB565 位图。
+  * @param  x, y          左上角坐标。
+  * @param  width, height 位图尺寸，必须完整位于屏幕内。
+  * @param  pixels        行优先 RGB565 像素数组。
+  */
+void Screen_DrawRgb565Bitmap(uint16_t x, uint16_t y,
+                             uint16_t width, uint16_t height,
+                             const uint16_t *pixels);
+
+/**
+  * @brief  在一个 LCD 窗口内连续绘制单色点阵，避免文字先清空再逐笔出现。
+  * @param  x, y          左上角坐标。
+  * @param  width, height 原始点阵尺寸。
+  * @param  bitmap        行优先、每行按 MSB 优先存储的点阵。
+  * @param  color         前景 RGB565 颜色。
+  * @param  back_color    背景 RGB565 颜色。
+  * @param  scale         整数放大倍数，0 按 1 处理。
+  */
+void Screen_DrawMonoBitmap(uint16_t x, uint16_t y,
+                           uint8_t width, uint8_t height,
+                           const uint8_t *bitmap,
+                           uint16_t color, uint16_t back_color,
+                           uint8_t scale);
+
+/**
   * @brief  画空心矩形。
   */
 void Screen_DrawRect(uint16_t x, uint16_t y,

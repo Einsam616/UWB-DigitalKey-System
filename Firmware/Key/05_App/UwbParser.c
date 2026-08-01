@@ -1,5 +1,37 @@
 #include "UwbParser.h"
 
+#define UWB_BIND_ACK_LENGTH 9u
+
+static const uint8_t s_bind_ack[UWB_BIND_ACK_LENGTH] =
+{
+    'O', 'K', '+', 'T', 'W', 'L', 'T', '=', '1'
+};
+
+/** @brief Reset only the current mc line without clearing command state. */
+static void UwbParser_ResetLine(UwbLineParser *parser)
+{
+    parser->length = 0u;
+    parser->line[0] = '\0';
+}
+
+/** @brief Match the binding acknowledgement in the unfiltered byte stream. */
+static void UwbParser_ConsumeBindAck(UwbLineParser *parser, uint8_t value)
+{
+    if (value == s_bind_ack[parser->bind_ack_index])
+    {
+        parser->bind_ack_index++;
+        if (parser->bind_ack_index >= UWB_BIND_ACK_LENGTH)
+        {
+            parser->bind_ack = 1u;
+            parser->bind_ack_index = 0u;
+        }
+    }
+    else
+    {
+        parser->bind_ack_index = (value == 'O') ? 1u : 0u;
+    }
+}
+
 /** @brief Convert one hexadecimal character to its numeric value. */
 static int UwbParser_Hex(char value)
 {
@@ -94,8 +126,9 @@ void UwbParser_Reset(UwbLineParser *parser)
 {
     if (parser != 0)
     {
-        parser->length = 0u;
-        parser->line[0] = '\0';
+        UwbParser_ResetLine(parser);
+        parser->bind_ack_index = 0u;
+        parser->bind_ack = 0u;
     }
 }
 
@@ -107,15 +140,16 @@ uint8_t UwbParser_Consume(UwbLineParser *parser,
     uint8_t parsed;
 
     if (parser == 0 || measurement == 0) return 0u;
+    UwbParser_ConsumeBindAck(parser, value);
     if (value == '\r' || value == '\n')
     {
         parsed = UwbParser_ParseLine(parser->line, parser->length, measurement);
-        UwbParser_Reset(parser);
+        UwbParser_ResetLine(parser);
         return parsed;
     }
     if (value == 0u)
     {
-        UwbParser_Reset(parser);
+        UwbParser_ResetLine(parser);
         return 0u;
     }
 
@@ -136,9 +170,20 @@ uint8_t UwbParser_Consume(UwbLineParser *parser,
     }
     if (parser->length >= (uint8_t)(sizeof(parser->line) - 1u))
     {
-        UwbParser_Reset(parser);
+        UwbParser_ResetLine(parser);
         if (value != 'm') return 0u;
     }
     parser->line[parser->length++] = (char)value;
     return 0u;
+}
+
+/** @brief Return and clear one latched binding acknowledgement. */
+uint8_t UwbParser_TakeBindAck(UwbLineParser *parser)
+{
+    uint8_t bind_ack;
+
+    if (parser == 0) return 0u;
+    bind_ack = parser->bind_ack;
+    parser->bind_ack = 0u;
+    return bind_ack;
 }
